@@ -1,1 +1,20 @@
-************CheckList**********************
+***************CheckList***************
+**Observaciones – Formulario FrmLibros**
+
+- Se corrigió la asignación de la propiedad `Existencia` para utilizar un valor entero en lugar de una cadena de texto.
+- Se agregó validación del campo de existencia para comprobar que el valor ingresado sea un número entero válido y no sea negativo.
+- Se corrigió el filtrado de libros por categoría, utilizando la variable `idCategoria` convertida al tipo `int`.
+- Se agregó validación para comprobar que exista una categoría seleccionada antes de realizar el filtrado.
+- Se conservaron la estructura original del formulario, los nombres de los controles, los métodos existentes y las llamadas a los repositorios.
+- Se mantuvieron los bloques `try-catch` y el registro de errores mediante `ErrorRepositorio`.
+
+**Observaciones – Formulario FrmPrestamos**
+
+- Se corrigió la conversión de la cantidad de libros ingresada, validando que sea un número entero mayor que cero.
+- Se corrigió la asignación de la fecha del préstamo utilizando `dtpFechaPrestamo.Value`, compatible con el tipo `DateTime`.
+- Se corrigió la llamada al método `Registrar` para enviar el préstamo y su lista de detalles.
+- Se ajustó el `ValueMember` del control `cmbLibro` para utilizar el identificador del libro (`ID`).
+- Se conservaron la estructura original del formulario, los nombres de los controles, los repositorios y los bloques de manejo de excepciones.
+- Se agregó la actualización de los datos después de registrar correctamente un préstamo.
+
+- Queda pendiente compilar y ejecutar el proyecto para comprobar el registro del préstamo y sus detalles en la base de datos MySQL.

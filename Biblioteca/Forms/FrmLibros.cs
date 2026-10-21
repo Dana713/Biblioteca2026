@@ -151,12 +151,11 @@ namespace Biblioteca.Forms
 
             try
             {
-                int existencia = Convert.ToInt32(txtExistencia.Text.Trim());
-
-                if (existencia < -1)
+                if (!int.TryParse(txtExistencia.Text.Trim(), out int existencia) || existencia < 0)
                 {
-                    MessageBox.Show("La existencia no puede ser negativa.",
+                    MessageBox.Show("Ingrese una existencia válida, mayor o igual a cero.",
                         "Biblioteca", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtExistencia.Focus();
                     return;
                 }
 
@@ -175,7 +174,7 @@ namespace Biblioteca.Forms
                 libro.Titulo = txtTitulo.Text.Trim();
                 libro.IDAutor = Convert.ToInt32(cmbAutor.SelectedValue);
                 libro.IDCategoria = Convert.ToInt32(cmbCategoria.SelectedValue);
-                libro.Existencia = txtExistencia.Text;
+                libro.Existencia = existencia;
                 libro.Activo = chkActivo.Checked;
 
                 if (repo.Agregar(libro))
@@ -233,12 +232,11 @@ namespace Biblioteca.Forms
 
             try
             {
-                int existencia = Convert.ToInt32(txtExistencia.Text.Trim());
-
-                if (existencia < 0)
+                if (!int.TryParse(txtExistencia.Text.Trim(), out int existencia) || existencia < 0)
                 {
-                    MessageBox.Show("La existencia no puede ser negativa.",
+                    MessageBox.Show("Ingrese una existencia válida, mayor o igual a cero.",
                         "Biblioteca", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtExistencia.Focus();
                     return;
                 }
 
@@ -351,8 +349,15 @@ namespace Biblioteca.Forms
         {
             try
             {
+                if (cmbFiltroCategoria.SelectedValue == null ||
+                    !int.TryParse(cmbFiltroCategoria.SelectedValue.ToString(), out int idCategoria))
+                {
+                    MessageBox.Show("Seleccione una categoría válida.",
+                        "Biblioteca", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 LibroRepositorio repo = new LibroRepositorio();
-                int idCategoria = Convert.ToInt32(cmbFiltroCategoria.SelectedValue);
 
                 if (idCategoria == 0)
                 {
@@ -360,7 +365,7 @@ namespace Biblioteca.Forms
                 }
                 else
                 {
-                    List<Libro> lista = repo.FiltrarPorCategoria(cmbFiltroCategoria.SelectedValue);
+                    List<Libro> lista = repo.FiltrarPorCategoria(idCategoria);
                     MostrarLista(lista);
                 }
             }

@@ -56,7 +56,7 @@ namespace Biblioteca.Forms
 
             cmbLibro.DataSource = null;
             cmbLibro.DisplayMember = "Titulo";
-            cmbLibro.ValueMember = "Titulo";
+            cmbLibro.ValueMember = "ID";
             cmbLibro.DataSource = libros;
         }
 
@@ -110,21 +110,20 @@ namespace Biblioteca.Forms
                 return;
             }
 
-            if (txtCantidad.Text.Trim() == "")
+            if (!int.TryParse(txtCantidad.Text.Trim(), out int cantidad) || cantidad <= 0)
             {
-                MessageBox.Show("Escriba la cantidad de libros a prestar.",
+                MessageBox.Show("Ingrese una cantidad válida mayor que cero.",
                     "Biblioteca", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtCantidad.Focus();
                 return;
             }
 
             try
             {
-                int cantidad = txtCantidad.Text;
-
                 Prestamo prestamo = new Prestamo();
 
                 prestamo.IDAlumno = Convert.ToInt32(cmbAlumno.SelectedValue);
-                prestamo.FechaPrestamo = dtpFechaPrestamo.Text;
+                prestamo.FechaPrestamo = dtpFechaPrestamo.Value;
                 prestamo.FechaLimite = dtpFechaLimite.Value.Date;
                 prestamo.Estado = "Activo";
 
@@ -138,12 +137,13 @@ namespace Biblioteca.Forms
 
                 IPrestamo repo = new PrestamoRepositorio();
 
-                if (repo.Registrar(prestamo))
+                if (repo.Registrar(prestamo, detalles))
                 {
                     MessageBox.Show("Préstamo registrado correctamente.",
                         "Biblioteca", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     txtCantidad.Clear();
+                    CargarDatos();
                 }
                 else
                 {

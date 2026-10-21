@@ -979,17 +979,17 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\salaz\\.nuget\\packages\\": {},
+    "C:\\Users\\Esmeralda Fernandez\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Proyectos\\UNIDEP\\POO\\2026\\practica final\\ProyectoBibliotecaPOO\\BibliotecaErrores\\BibliotecaErrores.csproj",
+      "projectUniqueName": "C:\\Users\\Esmeralda Fernandez\\Source\\Repos\\Biblioteca2026\\Biblioteca\\BibliotecaErrores.csproj",
       "projectName": "BibliotecaErrores",
-      "projectPath": "D:\\Proyectos\\UNIDEP\\POO\\2026\\practica final\\ProyectoBibliotecaPOO\\BibliotecaErrores\\BibliotecaErrores.csproj",
-      "packagesPath": "C:\\Users\\salaz\\.nuget\\packages\\",
-      "outputPath": "D:\\Proyectos\\UNIDEP\\POO\\2026\\practica final\\ProyectoBibliotecaPOO\\BibliotecaErrores\\obj\\",
+      "projectPath": "C:\\Users\\Esmeralda Fernandez\\Source\\Repos\\Biblioteca2026\\Biblioteca\\BibliotecaErrores.csproj",
+      "packagesPath": "C:\\Users\\Esmeralda Fernandez\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Esmeralda Fernandez\\Source\\Repos\\Biblioteca2026\\Biblioteca\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "UsingMicrosoftNETSdk": false,
@@ -997,7 +997,7 @@
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\salaz\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Esmeralda Fernandez\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1005,6 +1005,7 @@
         "net48"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

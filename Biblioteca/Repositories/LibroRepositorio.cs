@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Biblioteca.Interfaces;
 using Biblioteca.Models;
+using MySql.Data.MySqlClient;
 
 namespace Biblioteca.Repositories
 {
