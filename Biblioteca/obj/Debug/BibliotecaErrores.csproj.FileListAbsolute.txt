@@ -1,0 +1,4 @@
+D:\Proyectos\UNIDEP\POO\2026\practica final\ProyectoBibliotecaPOO\BibliotecaErrores\obj\Debug\BibliotecaErrores.csproj.AssemblyReference.cache
+D:\Proyectos\UNIDEP\POO\2026\practica final\ProyectoBibliotecaPOO\BibliotecaErrores\obj\Debug\BibliotecaErrores.csproj.SuggestedBindingRedirects.cache
+D:\Proyectos\UNIDEP\POO\2026\practica final\ProyectoBibliotecaPOO\BibliotecaErrores\obj\Debug\BibliotecaErrores.exe.config
+D:\Proyectos\UNIDEP\POO\2026\practica final\ProyectoBibliotecaPOO\BibliotecaErrores\obj\Debug\BibliotecaErrores.csproj.CoreCompileInputs.cache

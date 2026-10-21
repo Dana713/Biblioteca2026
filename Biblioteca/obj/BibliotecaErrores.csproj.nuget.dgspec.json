@@ -1,0 +1,62 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Proyectos\\UNIDEP\\POO\\2026\\practica final\\ProyectoBibliotecaPOO\\BibliotecaErrores\\BibliotecaErrores.csproj": {}
+  },
+  "projects": {
+    "D:\\Proyectos\\UNIDEP\\POO\\2026\\practica final\\ProyectoBibliotecaPOO\\BibliotecaErrores\\BibliotecaErrores.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Proyectos\\UNIDEP\\POO\\2026\\practica final\\ProyectoBibliotecaPOO\\BibliotecaErrores\\BibliotecaErrores.csproj",
+        "projectName": "BibliotecaErrores",
+        "projectPath": "D:\\Proyectos\\UNIDEP\\POO\\2026\\practica final\\ProyectoBibliotecaPOO\\BibliotecaErrores\\BibliotecaErrores.csproj",
+        "packagesPath": "C:\\Users\\salaz\\.nuget\\packages\\",
+        "outputPath": "D:\\Proyectos\\UNIDEP\\POO\\2026\\practica final\\ProyectoBibliotecaPOO\\BibliotecaErrores\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "UsingMicrosoftNETSdk": false,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\salaz\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net48": {
+            "framework": "net48",
+            "projectReferences": {}
+          }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net48": {
+          "framework": "net48",
+          "dependencies": {
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.6.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        }
+      }
+    }
+  }
+}
