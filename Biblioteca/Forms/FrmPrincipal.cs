@@ -50,5 +50,10 @@ namespace Biblioteca.Forms
         {
             this.Close();
         }
+
+        private void lblSubtitulo_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -90,8 +90,11 @@ namespace Biblioteca.Repositories
                         Libro libro = new Libro();
 
                         libro.ID = Convert.ToInt32(dr["id"].ToString());
-                        libro.ISBN = dr["titulo"].ToString();
-                        libro.Titulo = dr["isbn"].ToString();
+
+                        // CORREGIDO: antes se intercambiaban ISBN y título.
+                        libro.ISBN = dr["isbn"].ToString();
+                        libro.Titulo = dr["titulo"].ToString();
+
                         libro.IDAutor = Convert.ToInt32(dr["id_autor"].ToString());
                         libro.IDCategoria = Convert.ToInt32(dr["id_categoria"].ToString());
                         libro.Existencia = Convert.ToInt32(dr["existencia"].ToString());
@@ -148,7 +151,10 @@ namespace Biblioteca.Repositories
                         libro.Titulo = dr["titulo"].ToString();
                         libro.IDAutor = Convert.ToInt32(dr["id_autor"].ToString());
                         libro.IDCategoria = Convert.ToInt32(dr["id_categoria"].ToString());
-                        libro.Existencia = Convert.ToInt32(dr["id"].ToString());
+
+                        // CORREGIDO: antes se leía id en lugar de existencia.
+                        libro.Existencia = Convert.ToInt32(dr["existencia"].ToString());
+
                         libro.Activo = Convert.ToInt32(dr["activo"].ToString()) == 1;
                         libro.NombreAutor = dr["autor_nombre"].ToString() + " " +
                                             dr["autor_apellidos"].ToString();
@@ -234,9 +240,10 @@ namespace Biblioteca.Repositories
             {
                 conn.Open();
 
+                // CORREGIDO: la columna se llama existencia, no existencias.
                 string query = SelectLibros +
                                "WHERE l.id_categoria = @id_categoria " +
-                               "AND l.existencias > 0 " +
+                               "AND l.existencia > 0 " +
                                "ORDER BY l.titulo";
 
                 MySqlCommand comm = new MySqlCommand(query, conn);
@@ -343,7 +350,10 @@ namespace Biblioteca.Repositories
                 comm.Parameters.AddWithValue("@titulo", libro.Titulo);
                 comm.Parameters.AddWithValue("@id_autor", libro.IDAutor);
                 comm.Parameters.AddWithValue("@id_categoria", libro.IDCategoria);
-                comm.Parameters.AddWithValue("@existencias", libro.Existencia);
+
+                // CORREGIDO: el parámetro debe llamarse @existencia.
+                comm.Parameters.AddWithValue("@existencia", libro.Existencia);
+
                 comm.Parameters.AddWithValue("@activo", libro.Activo ? 1 : 0);
 
                 int filas = comm.ExecuteNonQuery();
@@ -352,7 +362,15 @@ namespace Biblioteca.Repositories
             }
             catch (Exception ex)
             {
-                new ErrorRepositorio().Registrar(ex, "isbn=" + libro.ISBN + ", titulo=" + libro.Titulo + ", id_autor=" + libro.IDAutor + ", id_categoria=" + libro.IDCategoria + ", existencia=" + libro.Existencia + ", activo=" + libro.Activo);
+                new ErrorRepositorio().Registrar(
+                    ex,
+                    "isbn=" + libro.ISBN +
+                    ", titulo=" + libro.Titulo +
+                    ", id_autor=" + libro.IDAutor +
+                    ", id_categoria=" + libro.IDCategoria +
+                    ", existencia=" + libro.Existencia +
+                    ", activo=" + libro.Activo);
+
                 throw;
             }
             finally
@@ -375,8 +393,10 @@ namespace Biblioteca.Repositories
 
                 MySqlCommand comm = new MySqlCommand(query, conn);
 
-                comm.Parameters.AddWithValue("@isbn", libro.Titulo);
-                comm.Parameters.AddWithValue("@titulo", libro.ISBN);
+                // CORREGIDO: cada propiedad se asigna a su columna correspondiente.
+                comm.Parameters.AddWithValue("@isbn", libro.ISBN);
+                comm.Parameters.AddWithValue("@titulo", libro.Titulo);
+
                 comm.Parameters.AddWithValue("@id_autor", libro.IDAutor);
                 comm.Parameters.AddWithValue("@id_categoria", libro.IDCategoria);
                 comm.Parameters.AddWithValue("@existencia", libro.Existencia);
@@ -389,7 +409,16 @@ namespace Biblioteca.Repositories
             }
             catch (Exception ex)
             {
-                new ErrorRepositorio().Registrar(ex, "id=" + libro.ID + ", isbn=" + libro.ISBN + ", titulo=" + libro.Titulo + ", id_autor=" + libro.IDAutor + ", id_categoria=" + libro.IDCategoria + ", existencia=" + libro.Existencia + ", activo=" + libro.Activo);
+                new ErrorRepositorio().Registrar(
+                    ex,
+                    "id=" + libro.ID +
+                    ", isbn=" + libro.ISBN +
+                    ", titulo=" + libro.Titulo +
+                    ", id_autor=" + libro.IDAutor +
+                    ", id_categoria=" + libro.IDCategoria +
+                    ", existencia=" + libro.Existencia +
+                    ", activo=" + libro.Activo);
+
                 throw;
             }
             finally
@@ -446,8 +475,9 @@ namespace Biblioteca.Repositories
             {
                 conn.Open();
 
+                // CORREGIDO: permite prestar todas las unidades disponibles.
                 string query = "UPDATE libros SET existencia = existencia - @cantidad " +
-                               "WHERE id = @id AND existencia > @cantidad";
+                               "WHERE id = @id AND activo = 1 AND existencia >= @cantidad";
 
                 MySqlCommand comm = new MySqlCommand(query, conn);
 
@@ -460,7 +490,10 @@ namespace Biblioteca.Repositories
             }
             catch (Exception ex)
             {
-                new ErrorRepositorio().Registrar(ex, "idLibro=" + idLibro + ", cantidad=" + cantidad);
+                new ErrorRepositorio().Registrar(
+                    ex,
+                    "idLibro=" + idLibro + ", cantidad=" + cantidad);
+
                 throw;
             }
             finally
@@ -495,13 +528,18 @@ namespace Biblioteca.Repositories
             }
             catch (Exception ex)
             {
-                new ErrorRepositorio().Registrar(ex, "idLibro=" + idLibro + ", cantidad=" + cantidad);
+                new ErrorRepositorio().Registrar(
+                    ex,
+                    "idLibro=" + idLibro + ", cantidad=" + cantidad);
+
                 throw;
             }
             finally
             {
                 conn.Close();
             }
+
+            return false;
         }
     }
 }

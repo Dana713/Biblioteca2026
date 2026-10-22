@@ -116,5 +116,13 @@
     <Content Include="biblioteca.sql" />
     <Content Include="CheckList.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\FrmAlumnos.resx">
+      <DependentUpon>FrmAlumnos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmPrincipal.resx">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

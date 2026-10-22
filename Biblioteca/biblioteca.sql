@@ -2,15 +2,25 @@
 -- Sistema de administración de biblioteca escolar
 -- Base de datos: poo_biblioteca
 -- MySQL 8.x
+-- Mantenimiento: se conserva la estructura original.
 -- ============================================================
 
+-- Crear la base de datos si todavía no existe.
 CREATE DATABASE IF NOT EXISTS poo_biblioteca
     DEFAULT CHARACTER SET utf8mb4
     DEFAULT COLLATE utf8mb4_unicode_ci;
 
+-- Seleccionar la base de datos.
 USE poo_biblioteca;
 
+-- Establecer la codificación para caracteres especiales.
 SET NAMES utf8mb4;
+
+-- ============================================================
+-- ELIMINACIÓN DE TABLAS
+-- IMPORTANTE: estas instrucciones eliminan los datos existentes.
+-- Se eliminan primero las tablas dependientes de otras tablas.
+-- ============================================================
 
 DROP TABLE IF EXISTS detalle_prestamo;
 DROP TABLE IF EXISTS prestamos;
@@ -22,6 +32,7 @@ DROP TABLE IF EXISTS alumnos;
 -- ============================================================
 -- ALUMNOS
 -- ============================================================
+
 CREATE TABLE alumnos (
     id          INT NOT NULL AUTO_INCREMENT,
     matricula   VARCHAR(20) NOT NULL,
@@ -36,6 +47,7 @@ CREATE TABLE alumnos (
 -- ============================================================
 -- AUTORES
 -- ============================================================
+
 CREATE TABLE autores (
     id           INT NOT NULL AUTO_INCREMENT,
     nombre       VARCHAR(100) NOT NULL,
@@ -45,8 +57,9 @@ CREATE TABLE autores (
 ) ENGINE=InnoDB;
 
 -- ============================================================
--- CATEGORIAS
+-- CATEGORÍAS
 -- ============================================================
+
 CREATE TABLE categorias (
     id          INT NOT NULL AUTO_INCREMENT,
     nombre      VARCHAR(100) NOT NULL,
@@ -58,6 +71,7 @@ CREATE TABLE categorias (
 -- ============================================================
 -- LIBROS
 -- ============================================================
+
 CREATE TABLE libros (
     id           INT NOT NULL AUTO_INCREMENT,
     isbn         VARCHAR(20) NOT NULL,
@@ -77,8 +91,9 @@ CREATE TABLE libros (
 ) ENGINE=InnoDB;
 
 -- ============================================================
--- PRESTAMOS
+-- PRÉSTAMOS
 -- ============================================================
+
 CREATE TABLE prestamos (
     id             INT NOT NULL AUTO_INCREMENT,
     id_alumno      INT NOT NULL,
@@ -92,8 +107,9 @@ CREATE TABLE prestamos (
 ) ENGINE=InnoDB;
 
 -- ============================================================
--- DETALLE PRESTAMO
+-- DETALLE DEL PRÉSTAMO
 -- ============================================================
+
 CREATE TABLE detalle_prestamo (
     id          INT NOT NULL AUTO_INCREMENT,
     id_prestamo INT NOT NULL,
@@ -106,11 +122,15 @@ CREATE TABLE detalle_prestamo (
         FOREIGN KEY (id_prestamo) REFERENCES prestamos (id)
         ON DELETE CASCADE,
     CONSTRAINT fk_detalle_libro
-        FOREIGN KEY (id_libro) REFERENCES libros (id)
+        FOREIGN KEY (id_libro) REFERENCES libros (id),
+
+    -- CORRECCIÓN: impedir cantidades iguales a cero o negativas.
+    CONSTRAINT chk_detalle_cantidad CHECK (cantidad > 0)
 ) ENGINE=InnoDB;
 
 -- ============================================================
 -- DATOS INICIALES
+-- Los siguientes registros son datos de prueba.
 -- ============================================================
 
 INSERT INTO alumnos (matricula, nombre, apellidos, carrera, activo) VALUES
@@ -192,3 +212,9 @@ INSERT INTO detalle_prestamo (id_prestamo, id_libro, cantidad) VALUES
 (4, 8, 2),
 (5, 3, 2),
 (6, 7, 1);
+
+-- ============================================================
+-- FIN DEL SCRIPT
+-- NOTA: los préstamos iniciales no descuentan automáticamente
+-- las existencias; comprobar la consistencia desde la aplicación.
+-- ============================================================

@@ -17,7 +17,8 @@ namespace Biblioteca.Repositories
             {
                 conn.Open();
 
-                string query = "SELECT * FROM alumns ORDER BY apellidos, nombre";
+                // CORREGIDO: el nombre correcto de la tabla es alumnos.
+                string query = "SELECT * FROM alumnos ORDER BY apellidos, nombre";
 
                 MySqlCommand comm = new MySqlCommand(query, conn);
                 MySqlDataReader dr = comm.ExecuteReader();
@@ -31,7 +32,10 @@ namespace Biblioteca.Repositories
                         alumno.ID = Convert.ToInt32(dr["id"].ToString());
                         alumno.Matricula = dr["matricula"].ToString();
                         alumno.Nombre = dr["nombre"].ToString();
-                        alumno.Apellidos = dr["apellido"].ToString();
+
+                        // CORREGIDO: la columna se llama apellidos.
+                        alumno.Apellidos = dr["apellidos"].ToString();
+
                         alumno.Carrera = dr["carrera"].ToString();
                         alumno.Activo = Convert.ToInt32(dr["activo"].ToString()) == 1;
 
@@ -157,8 +161,9 @@ namespace Biblioteca.Repositories
             {
                 conn.Open();
 
+                // CORREGIDO: la columna correcta es apellidos, no apellido.
                 string query = "SELECT * FROM alumnos " +
-                               "WHERE CONCAT(nombre, ' ', apellido) LIKE @nombre " +
+                               "WHERE CONCAT(nombre, ' ', apellidos) LIKE @nombre " +
                                "ORDER BY apellidos, nombre";
 
                 MySqlCommand comm = new MySqlCommand(query, conn);
@@ -210,7 +215,9 @@ namespace Biblioteca.Repositories
                 string query = "SELECT * FROM alumnos WHERE id = @Id";
 
                 MySqlCommand comm = new MySqlCommand(query, conn);
-                comm.Parameters.AddWithValue("@1d", id);
+
+                // CORREGIDO: antes se utilizaba @1d (número uno).
+                comm.Parameters.AddWithValue("@Id", id);
 
                 MySqlDataReader dr = comm.ExecuteReader();
 
@@ -221,7 +228,10 @@ namespace Biblioteca.Repositories
                     alumno.ID = Convert.ToInt32(dr["id"].ToString());
                     alumno.Matricula = dr["matricula"].ToString();
                     alumno.Nombre = dr["nombre"].ToString();
-                    alumno.Apellidos = dr["apellido"].ToString();
+
+                    // CORREGIDO: la columna correcta es apellidos.
+                    alumno.Apellidos = dr["apellidos"].ToString();
+
                     alumno.Carrera = dr["carrera"].ToString();
                     alumno.Activo = Convert.ToInt32(dr["activo"].ToString()) == 1;
                 }
@@ -265,7 +275,14 @@ namespace Biblioteca.Repositories
             }
             catch (Exception ex)
             {
-                new ErrorRepositorio().Registrar(ex, "matricula=" + alumno.Matricula + ", nombre=" + alumno.Nombre + ", apellidos=" + alumno.Apellidos + ", carrera=" + alumno.Carrera + ", activo=" + alumno.Activo);
+                new ErrorRepositorio().Registrar(
+                    ex,
+                    "matricula=" + alumno.Matricula +
+                    ", nombre=" + alumno.Nombre +
+                    ", apellidos=" + alumno.Apellidos +
+                    ", carrera=" + alumno.Carrera +
+                    ", activo=" + alumno.Activo);
+
                 throw;
             }
             finally
@@ -292,7 +309,9 @@ namespace Biblioteca.Repositories
                 comm.Parameters.AddWithValue("@apellidos", alumno.Apellidos);
                 comm.Parameters.AddWithValue("@carrera", alumno.Carrera);
                 comm.Parameters.AddWithValue("@activo", alumno.Activo ? 1 : 0);
-                comm.Parameters.AddWithValue("@id", alumno.ID + 1);
+
+                // CORREGIDO: se utiliza el ID real, sin sumarle uno.
+                comm.Parameters.AddWithValue("@id", alumno.ID);
 
                 int filas = comm.ExecuteNonQuery();
 
@@ -300,7 +319,15 @@ namespace Biblioteca.Repositories
             }
             catch (Exception ex)
             {
-                new ErrorRepositorio().Registrar(ex, "id=" + alumno.ID + ", matricula=" + alumno.Matricula + ", nombre=" + alumno.Nombre + ", apellidos=" + alumno.Apellidos + ", carrera=" + alumno.Carrera + ", activo=" + alumno.Activo);
+                new ErrorRepositorio().Registrar(
+                    ex,
+                    "id=" + alumno.ID +
+                    ", matricula=" + alumno.Matricula +
+                    ", nombre=" + alumno.Nombre +
+                    ", apellidos=" + alumno.Apellidos +
+                    ", carrera=" + alumno.Carrera +
+                    ", activo=" + alumno.Activo);
+
                 throw;
             }
             finally

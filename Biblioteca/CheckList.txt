@@ -1,4 +1,4 @@
-***************CheckList***************
+***************CheckList dia 1***************
 **Observaciones – Formulario FrmLibros**
 
 - Se corrigió la asignación de la propiedad `Existencia` para utilizar un valor entero en lugar de una cadena de texto.
@@ -7,7 +7,7 @@
 - Se agregó validación para comprobar que exista una categoría seleccionada antes de realizar el filtrado.
 - Se conservaron la estructura original del formulario, los nombres de los controles, los métodos existentes y las llamadas a los repositorios.
 - Se mantuvieron los bloques `try-catch` y el registro de errores mediante `ErrorRepositorio`.
-
+ss
 **Observaciones – Formulario FrmPrestamos**
 
 - Se corrigió la conversión de la cantidad de libros ingresada, validando que sea un número entero mayor que cero.
@@ -17,4 +17,42 @@
 - Se conservaron la estructura original del formulario, los nombres de los controles, los repositorios y los bloques de manejo de excepciones.
 - Se agregó la actualización de los datos después de registrar correctamente un préstamo.
 
-- Queda pendiente compilar y ejecutar el proyecto para comprobar el registro del préstamo y sus detalles en la base de datos MySQL.
+
+***************CheckList dia 1***************
+
+**Correcciones realizadas en biblioteca.sql**
+
+- Se documentó el propósito del script y de sus secciones mediante comentarios.
+- Se conservaron los nombres de la base de datos, las tablas, las columnas y las relaciones originales.
+- Se documentó el orden de eliminación de tablas para respetar las dependencias de las claves foráneas.
+- Se añadió una restricción CHECK para impedir cantidades de detalle de préstamo iguales a cero o negativas, compatible con MySQL 8.0.16 o posterior.
+- Se identificó la necesidad de comprobar la consistencia entre los préstamos iniciales y las existencias almacenadas.
+- Se señaló que los avisos SQL80001 deben verificarse en el entorno MySQL correspondiente antes de considerarlos errores del script.
+
+**Observaciones del AlumnoRepositorio**
+
+-Se detectaron errores en el nombre de la tabla y de algunas columnas utilizadas en las consultas SQL.
+-Se corrigió la consulta para obtener todos los alumnos, utilizando el nombre correcto de la tabla alumnos.
+-Se ajustó la lectura del campo apellidos para que coincida con la estructura de la base de datos.
+-Se corrigió la búsqueda de alumnos por nombre y apellidos.
+-Se revisó el parámetro utilizado en el método Buscar(int id) para que coincida con la consulta SQL.
+-Se corrigió el método Modificar(Alumno alumno) para utilizar el identificador real del alumno, evitando incrementar su ID.
+
+**Observaciones del LibroRepositorio**
+
+- Se identificaron y corrigieron errores en la asignación de ISBN, título y existencia de los libros.
+- Se corrigieron nombres de columnas y parámetros SQL para que coincidan con la estructura de la base de datos poo_biblioteca.
+- Se ajustaron las consultas de búsqueda por título, ISBN y categoría.
+- Se corrigió el método de modificación para guardar los datos en sus columnas correspondientes.
+- Se revisó el control de existencias para evitar cantidades negativas y permitir prestar todas las unidades disponibles.
+
+**Observaciones y correcciones del checklist – PrestamoRepositorio**
+
+- Se corrigió el filtro de préstamos activos para mostrar únicamente los registros con estado Activo.
+- Se corrigió la asignación de la fecha límite.
+- Se corrigió el nombre del parámetro utilizado para registrar el identificador del alumno.
+- Se agregó validación de alumnos, libros y cantidades antes de registrar un préstamo.
+- Se ajustó el control de existencias para descontar la cantidad solicitada y devolver la cantidad registrada.
+- Se incorporaron transacciones para mantener la consistencia entre préstamos, detalles e inventario.
+- Se agregó una validación para evitar registrar dos veces la devolución de un mismo préstamo.
+

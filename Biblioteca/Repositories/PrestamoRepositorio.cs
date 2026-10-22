@@ -12,48 +12,44 @@ namespace Biblioteca.Repositories
         {
             List<Prestamo> lista = new List<Prestamo>();
 
-            MySqlConnection conn = new MySqlConnection(Utils.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Utils.connStr))
             {
-                conn.Open();
-
-                string query = "SELECT p.id, p.id_alumno, p.fecha_prestamo, p.fecha_limite, p.estado, " +
-                               "a.matricula, CONCAT(a.nombre, ' ', a.apellidos) AS alumno " +
-                               "FROM prestamos p " +
-                               "INNER JOIN alumnos a ON p.id_alumno = a.id " +
-                               "ORDER BY p.id DESC";
-
-                MySqlCommand comm = new MySqlCommand(query, conn);
-                MySqlDataReader dr = comm.ExecuteReader();
-
-                if (dr.HasRows)
+                try
                 {
-                    while (dr.Read())
+                    conn.Open();
+
+                    string query = "SELECT p.id, p.id_alumno, p.fecha_prestamo, p.fecha_limite, p.estado, " +
+                                   "a.matricula, CONCAT(a.nombre, ' ', a.apellidos) AS alumno " +
+                                   "FROM prestamos p " +
+                                   "INNER JOIN alumnos a ON p.id_alumno = a.id " +
+                                   "ORDER BY p.id DESC";
+
+                    MySqlCommand comm = new MySqlCommand(query, conn);
+                    MySqlDataReader dr = comm.ExecuteReader();
+
+                    using (dr)
                     {
-                        Prestamo prestamo = new Prestamo();
+                        while (dr.Read())
+                        {
+                            Prestamo prestamo = new Prestamo();
 
-                        prestamo.ID = Convert.ToInt32(dr["id"].ToString());
-                        prestamo.IDAlumno = Convert.ToInt32(dr["id_alumno"].ToString());
-                        prestamo.FechaPrestamo = Convert.ToDateTime(dr["fecha_prestamo"].ToString());
-                        prestamo.FechaLimite = Convert.ToDateTime(dr["fecha_limite"].ToString());
-                        prestamo.Estado = dr["estado"].ToString();
-                        prestamo.Matricula = dr["matricula"].ToString();
-                        prestamo.NombreAlumno = dr["alumno"].ToString();
+                            prestamo.ID = Convert.ToInt32(dr["id"].ToString());
+                            prestamo.IDAlumno = Convert.ToInt32(dr["id_alumno"].ToString());
+                            prestamo.FechaPrestamo = Convert.ToDateTime(dr["fecha_prestamo"].ToString());
+                            prestamo.FechaLimite = Convert.ToDateTime(dr["fecha_limite"].ToString());
+                            prestamo.Estado = dr["estado"].ToString();
+                            prestamo.Matricula = dr["matricula"].ToString();
+                            prestamo.NombreAlumno = dr["alumno"].ToString();
 
-                        lista.Add(prestamo);
+                            lista.Add(prestamo);
+                        }
                     }
                 }
-
-                dr.Close();
-            }
-            catch (Exception ex)
-            {
-                new ErrorRepositorio().Registrar(ex, "Sin parametros");
-                throw;
-            }
-            finally
-            {
-                conn.Close();
+                catch (Exception ex)
+                {
+                    new ErrorRepositorio().Registrar(ex, "Sin parametros");
+                    throw;
+                }
             }
 
             return lista;
@@ -63,49 +59,45 @@ namespace Biblioteca.Repositories
         {
             List<Prestamo> lista = new List<Prestamo>();
 
-            MySqlConnection conn = new MySqlConnection(Utils.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Utils.connStr))
             {
-                conn.Open();
-
-                string query = "SELECT p.id, p.id_alumno, p.fecha_prestamo, p.fecha_limite, p.estado, " +
-                               "a.matricula, CONCAT(a.nombre, ' ', a.apellidos) AS alumno " +
-                               "FROM prestamos p " +
-                               "INNER JOIN alumnos a ON p.id_alumno = a.id " +
-                               "WHERE p.estado = 'Devuelto' " +
-                               "ORDER BY p.id DESC";
-
-                MySqlCommand comm = new MySqlCommand(query, conn);
-                MySqlDataReader dr = comm.ExecuteReader();
-
-                if (dr.HasRows)
+                try
                 {
-                    while (dr.Read())
+                    conn.Open();
+
+                    string query = "SELECT p.id, p.id_alumno, p.fecha_prestamo, p.fecha_limite, p.estado, " +
+                                   "a.matricula, CONCAT(a.nombre, ' ', a.apellidos) AS alumno " +
+                                   "FROM prestamos p " +
+                                   "INNER JOIN alumnos a ON p.id_alumno = a.id " +
+                                   "WHERE p.estado = 'Activo' " + // CORRECCIÓN: filtra préstamos activos, no devueltos.
+                                   "ORDER BY p.id DESC";
+
+                    MySqlCommand comm = new MySqlCommand(query, conn);
+                    MySqlDataReader dr = comm.ExecuteReader();
+
+                    using (dr)
                     {
-                        Prestamo prestamo = new Prestamo();
+                        while (dr.Read())
+                        {
+                            Prestamo prestamo = new Prestamo();
 
-                        prestamo.ID = Convert.ToInt32(dr["id"].ToString());
-                        prestamo.IDAlumno = Convert.ToInt32(dr["id_alumno"].ToString());
-                        prestamo.FechaPrestamo = Convert.ToDateTime(dr["fecha_prestamo"].ToString());
-                        prestamo.FechaLimite = Convert.ToDateTime(dr["fecha_prestamo"].ToString());
-                        prestamo.Estado = dr["estado"].ToString();
-                        prestamo.Matricula = dr["matricula"].ToString();
-                        prestamo.NombreAlumno = dr["alumno"].ToString();
+                            prestamo.ID = Convert.ToInt32(dr["id"].ToString());
+                            prestamo.IDAlumno = Convert.ToInt32(dr["id_alumno"].ToString());
+                            prestamo.FechaPrestamo = Convert.ToDateTime(dr["fecha_prestamo"].ToString());
+                            prestamo.FechaLimite = Convert.ToDateTime(dr["fecha_limite"].ToString()); // CORRECCIÓN: utiliza fecha_limite.
+                            prestamo.Estado = dr["estado"].ToString();
+                            prestamo.Matricula = dr["matricula"].ToString();
+                            prestamo.NombreAlumno = dr["alumno"].ToString();
 
-                        lista.Add(prestamo);
+                            lista.Add(prestamo);
+                        }
                     }
                 }
-
-                dr.Close();
-            }
-            catch (Exception ex)
-            {
-                new ErrorRepositorio().Registrar(ex, "Sin parametros");
-                throw;
-            }
-            finally
-            {
-                conn.Close();
+                catch (Exception ex)
+                {
+                    new ErrorRepositorio().Registrar(ex, "Sin parametros");
+                    throw;
+                }
             }
 
             return lista;
@@ -115,45 +107,44 @@ namespace Biblioteca.Repositories
         {
             Prestamo prestamo = null;
 
-            MySqlConnection conn = new MySqlConnection(Utils.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Utils.connStr))
             {
-                conn.Open();
-
-                string query = "SELECT p.id, p.id_alumno, p.fecha_prestamo, p.fecha_limite, p.estado, " +
-                               "a.matricula, CONCAT(a.nombre, ' ', a.apellidos) AS alumno " +
-                               "FROM prestamos p " +
-                               "INNER JOIN alumnos a ON p.id_alumno = a.id " +
-                               "WHERE p.id = @id";
-
-                MySqlCommand comm = new MySqlCommand(query, conn);
-                comm.Parameters.AddWithValue("@id", id);
-
-                MySqlDataReader dr = comm.ExecuteReader();
-
-                if (dr.Read())
+                try
                 {
-                    prestamo = new Prestamo();
+                    conn.Open();
 
-                    prestamo.ID = Convert.ToInt32(dr["id"].ToString());
-                    prestamo.IDAlumno = Convert.ToInt32(dr["id_alumno"].ToString());
-                    prestamo.FechaPrestamo = Convert.ToDateTime(dr["fecha_prestamo"].ToString());
-                    prestamo.FechaLimite = Convert.ToDateTime(dr["fecha_limite"].ToString());
-                    prestamo.Estado = dr["estado"].ToString();
-                    prestamo.Matricula = dr["matricula"].ToString();
-                    prestamo.NombreAlumno = dr["alumno"].ToString();
+                    string query = "SELECT p.id, p.id_alumno, p.fecha_prestamo, p.fecha_limite, p.estado, " +
+                                   "a.matricula, CONCAT(a.nombre, ' ', a.apellidos) AS alumno " +
+                                   "FROM prestamos p " +
+                                   "INNER JOIN alumnos a ON p.id_alumno = a.id " +
+                                   "WHERE p.id = @id";
+
+                    MySqlCommand comm = new MySqlCommand(query, conn);
+                    comm.Parameters.AddWithValue("@id", id);
+
+                    MySqlDataReader dr = comm.ExecuteReader();
+
+                    using (dr)
+                    {
+                        if (dr.Read())
+                        {
+                            prestamo = new Prestamo();
+
+                            prestamo.ID = Convert.ToInt32(dr["id"].ToString());
+                            prestamo.IDAlumno = Convert.ToInt32(dr["id_alumno"].ToString());
+                            prestamo.FechaPrestamo = Convert.ToDateTime(dr["fecha_prestamo"].ToString());
+                            prestamo.FechaLimite = Convert.ToDateTime(dr["fecha_limite"].ToString());
+                            prestamo.Estado = dr["estado"].ToString();
+                            prestamo.Matricula = dr["matricula"].ToString();
+                            prestamo.NombreAlumno = dr["alumno"].ToString();
+                        }
+                    }
                 }
-
-                dr.Close();
-            }
-            catch (Exception ex)
-            {
-                new ErrorRepositorio().Registrar(ex, "id=" + id);
-                throw;
-            }
-            finally
-            {
-                conn.Close();
+                catch (Exception ex)
+                {
+                    new ErrorRepositorio().Registrar(ex, "id=" + id);
+                    throw;
+                }
             }
 
             return prestamo;
@@ -163,47 +154,43 @@ namespace Biblioteca.Repositories
         {
             List<DetallePrestamo> lista = new List<DetallePrestamo>();
 
-            MySqlConnection conn = new MySqlConnection(Utils.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Utils.connStr))
             {
-                conn.Open();
-
-                string query = "SELECT d.id, d.id_prestamo, d.id_libro, d.cantidad, l.titulo " +
-                               "FROM detalle_prestamo d " +
-                               "INNER JOIN libros l ON d.id_libro = l.id " +
-                               "WHERE d.id_prestamo = @id_prestamo ORDER BY d.id";
-
-                MySqlCommand comm = new MySqlCommand(query, conn);
-                comm.Parameters.AddWithValue("@id_prestamo", idPrestamo);
-
-                MySqlDataReader dr = comm.ExecuteReader();
-
-                if (dr.HasRows)
+                try
                 {
-                    while (dr.Read())
+                    conn.Open();
+
+                    string query = "SELECT d.id, d.id_prestamo, d.id_libro, d.cantidad, l.titulo " +
+                                   "FROM detalle_prestamo d " +
+                                   "INNER JOIN libros l ON d.id_libro = l.id " +
+                                   "WHERE d.id_prestamo = @id_prestamo ORDER BY d.id";
+
+                    MySqlCommand comm = new MySqlCommand(query, conn);
+                    comm.Parameters.AddWithValue("@id_prestamo", idPrestamo);
+
+                    MySqlDataReader dr = comm.ExecuteReader();
+
+                    using (dr)
                     {
-                        DetallePrestamo detalle = new DetallePrestamo();
+                        while (dr.Read())
+                        {
+                            DetallePrestamo detalle = new DetallePrestamo();
 
-                        detalle.ID = Convert.ToInt32(dr["id"].ToString());
-                        detalle.IDPrestamo = Convert.ToInt32(dr["id_prestamo"].ToString());
-                        detalle.IDLibro = Convert.ToInt32(dr["id_libro"].ToString());
-                        detalle.Cantidad = Convert.ToInt32(dr["cantidad"].ToString());
-                        detalle.Titulo = dr["titulo"].ToString();
+                            detalle.ID = Convert.ToInt32(dr["id"].ToString());
+                            detalle.IDPrestamo = Convert.ToInt32(dr["id_prestamo"].ToString());
+                            detalle.IDLibro = Convert.ToInt32(dr["id_libro"].ToString());
+                            detalle.Cantidad = Convert.ToInt32(dr["cantidad"].ToString());
+                            detalle.Titulo = dr["titulo"].ToString();
 
-                        lista.Add(detalle);
+                            lista.Add(detalle);
+                        }
                     }
                 }
-
-                dr.Close();
-            }
-            catch (Exception ex)
-            {
-                new ErrorRepositorio().Registrar(ex, "idPrestamo=" + idPrestamo);
-                throw;
-            }
-            finally
-            {
-                conn.Close();
+                catch (Exception ex)
+                {
+                    new ErrorRepositorio().Registrar(ex, "idPrestamo=" + idPrestamo);
+                    throw;
+                }
             }
 
             return lista;
@@ -211,102 +198,161 @@ namespace Biblioteca.Repositories
 
         public bool Registrar(Prestamo prestamo, List<DetallePrestamo> detalles)
         {
+            // CORRECCIÓN: no permite préstamos sin alumno ni detalles.
             if (prestamo == null || detalles == null || detalles.Count == 0)
             {
                 return false;
             }
 
-            AlumnoRepositorio alumnoRepo = new AlumnoRepositorio();
-            Alumno alumno = alumnoRepo.Buscar(prestamo.IDAlumno);
-
-            if (alumno == null)
+            if (prestamo.IDAlumno <= 0)
             {
                 return false;
             }
 
-            LibroRepositorio libroRepo = new LibroRepositorio();
-
+            // CORRECCIÓN: cada detalle debe tener un libro válido y una cantidad positiva.
             for (int i = 0; i < detalles.Count; i++)
             {
-                DetallePrestamo detalle = detalles[i];
-
-                if (detalle == null || detalle.Cantidad < 0)
-                {
-                    return false;
-                }
-
-                Libro libro = libroRepo.Buscar(detalle.IDLibro);
-
-                if (libro == null)
-                {
-                    return false;
-                }
-
-                if (libro.Existencia < detalle.Cantidad)
+                if (detalles[i] == null ||
+                    detalles[i].IDLibro <= 0 ||
+                    detalles[i].Cantidad <= 0)
                 {
                     return false;
                 }
             }
 
-            MySqlConnection conn = new MySqlConnection(Utils.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Utils.connStr))
             {
-                conn.Open();
+                MySqlTransaction trans = null;
 
-                string query = "INSERT INTO prestamos(id_alumno, fecha_prestamo, fecha_limite, estado) " +
-                               "VALUES(@id_alumno, @fecha_prestamo, @fecha_limite, 'Activo')";
-
-                MySqlCommand comm = new MySqlCommand(query, conn);
-
-                comm.Parameters.AddWithValue("@alumno", prestamo.IDAlumno);
-                comm.Parameters.AddWithValue("@fecha_prestamo", prestamo.FechaPrestamo.Date);
-                comm.Parameters.AddWithValue("@fecha_limite", prestamo.FechaLimite.Date);
-
-                int filas = comm.ExecuteNonQuery();
-
-                if (filas == 0)
+                try
                 {
-                    return false;
+                    conn.Open();
+
+                    // CORRECCIÓN: todas las operaciones se ejecutan en una transacción.
+                    trans = conn.BeginTransaction();
+
+                    // Verifica que el alumno exista.
+                    string queryAlumno = "SELECT COUNT(*) FROM alumnos WHERE id = @id_alumno";
+
+                    using (MySqlCommand commAlumno = new MySqlCommand(queryAlumno, conn, trans))
+                    {
+                        commAlumno.Parameters.AddWithValue("@id_alumno", prestamo.IDAlumno);
+
+                        int alumnoExiste = Convert.ToInt32(commAlumno.ExecuteScalar());
+
+                        if (alumnoExiste == 0)
+                        {
+                            trans.Rollback();
+                            return false;
+                        }
+                    }
+
+                    // CORRECCIÓN: el nombre del parámetro coincide con @id_alumno.
+                    string query = "INSERT INTO prestamos(id_alumno, fecha_prestamo, fecha_limite, estado) " +
+                                   "VALUES(@id_alumno, @fecha_prestamo, @fecha_limite, 'Activo')";
+
+                    using (MySqlCommand comm = new MySqlCommand(query, conn, trans))
+                    {
+                        comm.Parameters.AddWithValue("@id_alumno", prestamo.IDAlumno);
+                        comm.Parameters.AddWithValue("@fecha_prestamo", prestamo.FechaPrestamo.Date);
+                        comm.Parameters.AddWithValue("@fecha_limite", prestamo.FechaLimite.Date);
+
+                        int filas = comm.ExecuteNonQuery();
+
+                        if (filas == 0)
+                        {
+                            trans.Rollback();
+                            return false;
+                        }
+                    }
+
+                    // Obtiene el identificador del préstamo recién insertado.
+                    int idPrestamo;
+
+                    using (MySqlCommand commID = new MySqlCommand(
+                        "SELECT LAST_INSERT_ID()", conn, trans))
+                    {
+                        idPrestamo = Convert.ToInt32(commID.ExecuteScalar());
+                    }
+
+                    for (int i = 0; i < detalles.Count; i++)
+                    {
+                        DetallePrestamo detalle = detalles[i];
+
+                        // CORRECCIÓN: descuenta la cantidad solicitada solo si hay existencias suficientes.
+                        // La condición activo = 1 supone que libros tiene una columna activo.
+                        string queryStock = "UPDATE libros " +
+                                            "SET existencia = existencia - @cantidad " +
+                                            "WHERE id = @id_libro AND activo = 1 " +
+                                            "AND existencia >= @cantidad";
+
+                        using (MySqlCommand commStock = new MySqlCommand(queryStock, conn, trans))
+                        {
+                            commStock.Parameters.AddWithValue("@cantidad", detalle.Cantidad);
+                            commStock.Parameters.AddWithValue("@id_libro", detalle.IDLibro);
+
+                            int stockActualizado = commStock.ExecuteNonQuery();
+
+                            if (stockActualizado == 0)
+                            {
+                                // CORRECCIÓN: cancela todo si no hay suficientes ejemplares.
+                                trans.Rollback();
+                                return false;
+                            }
+                        }
+
+                        string queryDetalle = "INSERT INTO detalle_prestamo(id_prestamo, id_libro, cantidad) " +
+                                              "VALUES(@id_prestamo, @id_libro, @cantidad)";
+
+                        using (MySqlCommand commDetalle = new MySqlCommand(queryDetalle, conn, trans))
+                        {
+                            commDetalle.Parameters.AddWithValue("@id_prestamo", idPrestamo);
+                            commDetalle.Parameters.AddWithValue("@id_libro", detalle.IDLibro);
+                            commDetalle.Parameters.AddWithValue("@cantidad", detalle.Cantidad);
+
+                            commDetalle.ExecuteNonQuery();
+                        }
+
+                        detalle.IDPrestamo = idPrestamo;
+                    }
+
+                    // Confirma el préstamo, los detalles y el descuento de inventario juntos.
+                    trans.Commit();
+
+                    prestamo.ID = idPrestamo;
+
+                    return true;
                 }
-
-                string queryID = "SELECT LAST_INSERT_ID()";
-
-                MySqlCommand commID = new MySqlCommand(queryID, conn);
-                int idPrestamo = Convert.ToInt32(commID.ExecuteScalar().ToString());
-
-                for (int i = 0; i < detalles.Count; i++)
+                catch (Exception ex)
                 {
-                    DetallePrestamo detalle = detalles[i];
+                    // CORRECCIÓN: revierte las operaciones incompletas si ocurre un error.
+                    if (trans != null)
+                    {
+                        try
+                        {
+                            trans.Rollback();
+                        }
+                        catch
+                        {
 
-                    string queryDetalle = "INSERT INTO detalle_prestamo(id_prestamo, id_libro, cantidad) " +
-                                          "VALUES(@id_prestamo, @id_libro, @cantidad)";
+                        }
+                    }
 
-                    MySqlCommand commDetalle = new MySqlCommand(queryDetalle, conn);
+                    string parametros = "id_alumno=" + prestamo.IDAlumno +
+                                         ", fecha_prestamo=" + prestamo.FechaPrestamo.Date +
+                                         ", fecha_limite=" + prestamo.FechaLimite.Date +
+                                         ", detalles_count=" + detalles.Count;
 
-                    commDetalle.Parameters.AddWithValue("@id_prestamo", idPrestamo);
-                    commDetalle.Parameters.AddWithValue("@id_libro", detalle.IDLibro);
-                    commDetalle.Parameters.AddWithValue("@cantidad", detalle.Cantidad);
-
-                    commDetalle.ExecuteNonQuery();
-
-                    libroRepo.DisminuirExistencia(detalle.IDLibro, 1);
-
-                    detalle.IDPrestamo = idPrestamo;
+                    new ErrorRepositorio().Registrar(ex, parametros);
+                    throw;
                 }
-
-                prestamo.ID = idPrestamo;
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                string parametros = "id_alumno=" + prestamo.IDAlumno + ", fecha_prestamo=" + prestamo.FechaPrestamo.Date + ", fecha_limite=" + prestamo.FechaLimite.Date + ", detalles_count=" + detalles.Count;
-                new ErrorRepositorio().Registrar(ex, parametros);
-                throw;
-            }
-            finally
-            {
-                conn.Close();
+                finally
+                {
+                    if (trans != null)
+                    {
+                        trans.Dispose();
+                    }
+                }
             }
         }
 
@@ -317,51 +363,143 @@ namespace Biblioteca.Repositories
                 return false;
             }
 
-            Prestamo prestamo = Buscar(idPrestamo);
-
-            if (prestamo == null)
+            using (MySqlConnection conn = new MySqlConnection(Utils.connStr))
             {
-                return false;
-            }
+                MySqlTransaction trans = null;
 
-            List<DetallePrestamo> detalles = ObtenerDetalles(idPrestamo);
+                try
+                {
+                    conn.Open();
 
-            if (detalles.Count == 0)
-            {
-                return false;
-            }
+                    // CORRECCIÓN: devolución e inventario se actualizan en una transacción.
+                    trans = conn.BeginTransaction();
 
-            LibroRepositorio libroRepo = new LibroRepositorio();
+                    string queryPrestamo = "SELECT estado FROM prestamos " +
+                                           "WHERE id = @id FOR UPDATE";
 
-            for (int i = 0; i < detalles.Count; i++)
-            {
-                DetallePrestamo detalle = detalles[i];
+                    string estado;
 
-                libroRepo.AumentarExistencia(detalle.IDLibro, 1);
-            }
+                    using (MySqlCommand comm = new MySqlCommand(queryPrestamo, conn, trans))
+                    {
+                        comm.Parameters.AddWithValue("@id", idPrestamo);
 
-            MySqlConnection conn = new MySqlConnection(Utils.connStr);
-            try
-            {
-                conn.Open();
+                        object resultado = comm.ExecuteScalar();
 
-                string query = "UPDATE prestamos SET estado = 'Devuelto' WHERE id = @id";
+                        if (resultado == null || resultado == DBNull.Value)
+                        {
+                            trans.Rollback();
+                            return false;
+                        }
 
-                MySqlCommand comm = new MySqlCommand(query, conn);
-                comm.Parameters.AddWithValue("@id", idPrestamo);
+                        estado = resultado.ToString();
+                    }
 
-                int filas = comm.ExecuteNonQuery();
+                    // CORRECCIÓN: evita devolver dos veces el mismo préstamo.
+                    if (estado != "Activo")
+                    {
+                        trans.Rollback();
+                        return false;
+                    }
 
-                return filas > 0;
-            }
-            catch (Exception ex)
-            {
-                new ErrorRepositorio().Registrar(ex, "idPrestamo=" + idPrestamo);
-                throw;
-            }
-            finally
-            {
-                conn.Close();
+                    List<DetallePrestamo> detalles = new List<DetallePrestamo>();
+
+                    string queryDetalles = "SELECT id_libro, cantidad " +
+                                           "FROM detalle_prestamo WHERE id_prestamo = @id_prestamo";
+
+                    using (MySqlCommand comm = new MySqlCommand(queryDetalles, conn, trans))
+                    {
+                        comm.Parameters.AddWithValue("@id_prestamo", idPrestamo);
+
+                        using (MySqlDataReader dr = comm.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                DetallePrestamo detalle = new DetallePrestamo();
+
+                                detalle.IDLibro = Convert.ToInt32(dr["id_libro"].ToString());
+                                detalle.Cantidad = Convert.ToInt32(dr["cantidad"].ToString());
+
+                                detalles.Add(detalle);
+                            }
+                        }
+                    }
+
+                    if (detalles.Count == 0)
+                    {
+                        trans.Rollback();
+                        return false;
+                    }
+
+                    for (int i = 0; i < detalles.Count; i++)
+                    {
+                        DetallePrestamo detalle = detalles[i];
+
+                        // CORRECCIÓN: devuelve la cantidad registrada en el detalle.
+                        string queryStock = "UPDATE libros " +
+                                            "SET existencia = existencia + @cantidad " +
+                                            "WHERE id = @id_libro";
+
+                        using (MySqlCommand comm = new MySqlCommand(queryStock, conn, trans))
+                        {
+                            comm.Parameters.AddWithValue("@cantidad", detalle.Cantidad);
+                            comm.Parameters.AddWithValue("@id_libro", detalle.IDLibro);
+
+                            int filas = comm.ExecuteNonQuery();
+
+                            if (filas == 0)
+                            {
+                                trans.Rollback();
+                                return false;
+                            }
+                        }
+                    }
+
+                    // CORRECCIÓN: solo marca como devuelto un préstamo que estaba activo.
+                    string queryDevolucion = "UPDATE prestamos " +
+                                             "SET estado = 'Devuelto' " +
+                                             "WHERE id = @id AND estado = 'Activo'";
+
+                    using (MySqlCommand comm = new MySqlCommand(queryDevolucion, conn, trans))
+                    {
+                        comm.Parameters.AddWithValue("@id", idPrestamo);
+
+                        int filas = comm.ExecuteNonQuery();
+
+                        if (filas == 0)
+                        {
+                            trans.Rollback();
+                            return false;
+                        }
+                    }
+
+                    trans.Commit();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    if (trans != null)
+                    {
+                        try
+                        {
+                            trans.Rollback();
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+
+                    new ErrorRepositorio().Registrar(ex, "idPrestamo=" + idPrestamo);
+                    throw;
+                }
+                finally
+                {
+                    if (trans != null)
+                    {
+                        trans.Dispose();
+                    }
+                }
             }
         }
     }

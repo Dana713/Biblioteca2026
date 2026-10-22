@@ -296,5 +296,10 @@ namespace Biblioteca.Forms
         {
             LimpiarCampos();
         }
+
+        private void txtMatricula_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
